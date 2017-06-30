@@ -9,12 +9,12 @@
 import UIKit
 
 /// Simple view for drawing gradients and borders.
-@IBDesignable open class GradientView: UIView {
+open class GradientView: UIView {
 
 	// MARK: - Types
 
 	/// The mode of the gradient.
-	public enum Mode {
+    @objc public enum Mode:Int {
 		/// A linear gradient.
 		case linear
 
@@ -24,7 +24,7 @@ import UIKit
 
 
 	/// The direction of the gradient.
-	public enum Direction {
+    @objc public enum Direction:Int {
 		/// The gradient is vertical.
 		case vertical
 
@@ -72,14 +72,14 @@ import UIKit
 	}
 
 	/// The mode of the gradient. The default is `.Linear`.
-	@IBInspectable open var mode: Mode = .linear {
+	@IBInspectable @objc open var mode: Mode = .linear {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
 
 	/// The direction of the gradient. Only valid for the `Mode.Linear` mode. The default is `.Vertical`.
-	@IBInspectable open var direction: Direction = .vertical {
+	@IBInspectable @objc open var direction: Direction = .vertical {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -217,7 +217,12 @@ import UIKit
 				return UIColor(red: red, green: green, blue: blue, alpha: alpha).cgColor as AnyObject!
 			} as NSArray
 
-			gradient = CGGradient(colorsSpace: colorSpace, colors: gradientColors, locations: locations)
+			// TODO: This is ugly. Surely there is a way to make this more concise.
+			if let locations = locations {
+				gradient = CGGradient(colorsSpace: colorSpace, colors: gradientColors, locations: locations)
+			} else {
+				gradient = CGGradient(colorsSpace: colorSpace, colors: gradientColors, locations: nil)
+			}
 		}
 	}
 
